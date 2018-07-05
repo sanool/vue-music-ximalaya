@@ -11,6 +11,17 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.(png|jpg|gif|woff|svg|eot|ttf)$/,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 8192
+            }
+          }
+        ]
+      },
+      {
         test: /\.css$/,
         use: [
           'vue-style-loader',
@@ -61,7 +72,7 @@ module.exports = {
         exclude: /node_modules/
       },
       {
-        test: /\.(png|jpg|gif|svg)$/,
+        test: /\.(png|jpg|gif|svg|mp3)$/,
         loader: 'file-loader',
         options: {
           name: '[name].[ext]?[hash]'
@@ -71,6 +82,9 @@ module.exports = {
   },
   resolve: {
     alias: {
+      'src':  path.resolve(__dirname, './src'),
+      'components': path.resolve(__dirname, './src/components/'),
+      'static': path.resolve(__dirname, './src/static/'),
       'vue$': 'vue/dist/vue.esm.js'
     },
     extensions: ['*', '.js', '.vue', '.json']
@@ -83,7 +97,13 @@ module.exports = {
   performance: {
     hints: false
   },
-  devtool: '#eval-source-map'
+  devtool: '#eval-source-map',
+  plugins: [new webpack.ProvidePlugin({
+    $: "jquery",
+    jQuery: "jquery",
+    jquery: "jquery",
+    "window.jQuery": "jquery"
+  })]
 }
 
 if (process.env.NODE_ENV === 'production') {
