@@ -7,7 +7,7 @@
           <div class="recommend-list-cards" @click="gotoDetail">
             <div class="recommend-list-card" v-for="item in list.albumList">
               <img class="recommend-list-card-img" :src="item.albumCoverPath"/>
-              <div class="recommend-list-card-listenCount">123</div>
+              <div class="recommend-list-card-listenCount">{{Math.floor(item.albumPlayCount/1000)/10}}w</div>
               <div class="recommend-list-card-title">{{item.albumTitle}}</div>
               <div class="recommend-list-card-author">{{item.albumUserNickName}}</div>
             </div>
@@ -30,10 +30,16 @@
          }
       },
         methods:{
+          transferCounts(counts){
+            return parseInt(counts)>10000?Math.floor(counts/1000)/10:counts
+          },
           gotoDetail(){
             alert("detail")
           }
         },
+      computed:{
+
+      },
         mounted(){
           this.axios.get('src/json/guessYouLove.json').then( response =>{
             console.log('guessYouLove.json:')
