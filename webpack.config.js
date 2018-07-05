@@ -11,6 +11,17 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.(png|jpg|gif)$/,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 8192
+            }
+          }
+        ]
+      },
+      {
         test: /\.css$/,
         use: [
           'vue-style-loader',
@@ -71,6 +82,9 @@ module.exports = {
   },
   resolve: {
     alias: {
+      'src':  path.resolve(__dirname, './src'),
+      'components': path.resolve(__dirname, './src/components/'),
+      'static': path.resolve(__dirname, './src/static/'),
       'vue$': 'vue/dist/vue.esm.js'
     },
     extensions: ['*', '.js', '.vue', '.json']
