@@ -1,16 +1,33 @@
-.content{
-  padding: 50px 0;
+.content {
   background: #e5e7e7;
 }
-.ml10{
+
+.ml10 {
   margin-left: 10px;
 }
-.mr10{
+
+.mr10 {
   margin-right: 10px;
 }
-.mt10{
+
+.mt10 {
   margin-top: 10px;
 }
-.mb10{
+
+.mb10 {
   margin-bottom: 10px;
+}
+
+.pull-left{
+  float:left;
+}
+.clearfix:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+.hr{
+  width: 100%;
+  border-top: 1px solid #c2bcbc;
 }

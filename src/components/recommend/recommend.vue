@@ -1,11 +1,15 @@
 <template>
     <div>
       <div class="recommend-slider"></div>
+      <audio id="musicAudio" controls="controls" loop="loop"
+             :src="musicSrc">
+      </audio>
+      <div class="icon" @click="playOrPause">stop</div>
       <div class="recommend-lists">
         <div class="recommend-list" v-for="list in lists">
           <div class="recommend-list-title mb10">{{list.title}}</div>
-          <div class="recommend-list-cards" @click="gotoDetail">
-            <div class="recommend-list-card" v-for="item in list.albumList">
+          <div class="recommend-list-cards">
+            <div class="recommend-list-card" @click="gotoDetail(item.albumId)"  v-for="item in list.albumList">
               <img class="recommend-list-card-img" :src="item.albumCoverPath"/>
               <div class="recommend-list-card-listenCount">{{Math.floor(item.albumPlayCount/1000)/10}}w</div>
               <div class="recommend-list-card-title">{{item.albumTitle}}</div>
@@ -26,21 +30,27 @@
         name: "recommend",
         data() {
           return {
-            lists:[]
+            lists:[],
+            musicSrc:'/src/json/1.mp3'
          }
-      },
+        },
         methods:{
-          transferCounts(counts){
-            return parseInt(counts)>10000?Math.floor(counts/1000)/10:counts
+          playOrPause(){
+            let musicAudio = document.getElementById('musicAudio')
+            if(musicAudio.paused){
+              musicAudio.play();
+            }else{
+              musicAudio.pause();
+            }
           },
-          gotoDetail(){
-            alert("detail")
-          }
+          gotoDetail(listId){
+            this.$router.push({name:'programList',query:{listId:listId}})
+          },
         },
       computed:{
 
       },
-        mounted(){
+      mounted(){
           this.axios.get('src/json/guessYouLove.json').then( response =>{
             console.log('guessYouLove.json:')
             console.log(response.data)
@@ -62,6 +72,7 @@
     border-radius: 3px;
     margin: 10px 0;
     padding: 10px;
+    overflow: hidden;
   }
  .recommend-list-title{
    font-size: 14px;
@@ -78,10 +89,10 @@
    margin: 5px 10px 0 0;
    padding: 5px;
    border: 1px solid #cbc6c6;
-   box-shadow: 2px 2px 7px #cbc6c6;
+   box-shadow: 0 0 7px #cbc6c6;
  }
  .recommend-list-card:hover{
-   box-shadow: 2px 2px 7px #eb3f17;
+   box-shadow: 0 0 7px #eb3f17;
  }
   .recommend-list-card-img{
     width: 100px;
