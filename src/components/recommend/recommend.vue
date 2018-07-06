@@ -86,6 +86,7 @@
  }
  .recommend-list-card{
    position: relative;
+   max-width: 100px;
    margin: 5px 10px 0 0;
    padding: 5px;
    border: 1px solid #cbc6c6;
