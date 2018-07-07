@@ -52,11 +52,9 @@
       },
       mounted(){
           this.axios.get('src/json/guessYouLove.json').then( response =>{
-            console.log('guessYouLove.json:')
-            console.log(response.data)
             this.lists = response.data.data.cards;
           },function (error) {
-
+            console.log('get guessYouLove.json error')
           })
       }
     }
@@ -86,6 +84,7 @@
  }
  .recommend-list-card{
    position: relative;
+   max-width: 100px;
    margin: 5px 10px 0 0;
    padding: 5px;
    border: 1px solid #cbc6c6;
