@@ -25,12 +25,12 @@
       <audio id="musicAudio" autoplay="autoplay" :src="tracksAudioPlay.length>0?tracksAudioPlay[playingIndex].src:defaultMusic">
       </audio>
       <div class="listen-bottom-btns">
-        <div class="icon-pause listen-play-method" @click="changePlayWay"></div>
-        <div class="icon-previous listen-play-previous" @click="previousMusic"></div>
+        <div :class="{'icon-loop':playWay===0,'icon-love':playWay===1,'icon-next':playWay===2}" @click="changePlayWay"></div>
+        <div class="icon-previous" @click="previousMusic"></div>
         <div class="listen-play-status" :class="{'icon-play':isPaused,'icon-pause':!isPaused}"
              @click="playOrPause"></div>
-        <div class="icon-next listen-play-next" @click="nextMusic"></div>
-        <div class="icon-next listen-play-love" @click=""></div>
+        <div class="icon-next" @click="nextMusic"></div>
+        <div class="icon-love listen-play-love" :class="{'loved':tracksAudioPlay.length>0&&tracksAudioPlay[playingIndex].isLike}" @click="loveMusic(playingIndex)"></div>
       </div>
     </div>
   </div>
@@ -44,7 +44,7 @@
     let secondStr = second < 10 ? ('0' + second) : second
     return minuteStr + ':' + secondStr
   }
-  let randormIndex = function(startNum,endNum) {
+  let randomIndex = function(startNum,endNum) {
     return Math.floor(Math.random()*(endNum-startNum)+startNum)
   }
   export default {
@@ -79,34 +79,40 @@
         this.isPaused = !this.isPaused
         if (this.isPaused) {
           clearTimeout(this.timeOut)
+          musicAudio.pause();
         } else {
           this.setProcessPercent()
-        }
-        if (musicAudio.paused) {
           musicAudio.play();
-        } else {
-          musicAudio.pause();
         }
       },
       previousMusic(){
         if(this.playingIndex>0){
           this.playingIndex--
         }
+        this.isPaused = false
       },
       nextMusic(){
         let playingIndex = this.playingIndex
-        this.playingIndex=(++playingIndex)%(this.tracksAudioPlay.length)
+        switch (this.playWay){
+          case 1:
+            this.playingIndex = randomIndex(0,this.tracksAudioPlay.length)
+            break;
+          default:
+            this.playingIndex=(++playingIndex)%(this.tracksAudioPlay.length);
+            break;
+        }
+        this.isPaused = false
       },
       changePlayWay(){
         let playWay = this.playWay
         playWay++
-        this.playWay = Math.floor(playWay%4)
+        this.playWay = Math.floor(playWay%3)
         switch (this.playWay){
           case 0:break;
           case 1:{
-            musicAudio.addEventListener("ended", () =>{
-              this.playingIndex = randormIndex(0,this.tracksAudioPlay.length)
-            },false)
+            // musicAudio.addEventListener("ended", () =>{
+            //   this.playingIndex = randomIndex(0,this.tracksAudioPlay.length)
+            // },false)
             break;
           }
           case 2:break;
@@ -115,6 +121,9 @@
         musicAudio.addEventListener('ended',()=> {
 
         },false)
+      },
+      loveMusic(){
+
       },
       changeProcess(event) {
         if (event && event.offsetX) {
@@ -295,11 +304,17 @@
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
-    font-size: 2em;
+    font-size: 1.5em;
     color: #fff;
   }
 
   .listen-play-status {
-    font-size: 1.5em;
+    font-size: 2em;
+  }
+  .listen-play-love{
+    color: #fff;
+  }
+  .listen-play-love.loved{
+    color:red;
   }
 </style>
