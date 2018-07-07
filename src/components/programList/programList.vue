@@ -65,22 +65,18 @@
     },
     mounted() {
       this.axios.get('src/json/programDetail.json').then(response => {
-        console.log('programDetail.json:')
-        console.log(response.data)
         this.mainInfo = response.data.data.mainInfo;
         this.anchorInfo = response.data.data.anchorInfo;
         this.type = response.data.data.mainInfo.crumbs.categoryTitle;
       }, function (error) {
-
+        console.log('get programDetail.json error')
       })
 
       this.axios.get('src/json/page.json').then(response => {
-        console.log('page.json:')
-        console.log(response.data)
         this.trackTotalCount = response.data.data.trackTotalCount;
         this.programList = response.data.data.tracks;
       }, function (error) {
-
+        console.log('get page.json error')
       })
     }
   }

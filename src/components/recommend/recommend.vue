@@ -52,11 +52,9 @@
       },
       mounted(){
           this.axios.get('src/json/guessYouLove.json').then( response =>{
-            console.log('guessYouLove.json:')
-            console.log(response.data)
             this.lists = response.data.data.cards;
           },function (error) {
-
+            console.log('get guessYouLove.json error')
           })
       }
     }
