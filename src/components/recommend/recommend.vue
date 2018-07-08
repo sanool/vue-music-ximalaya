@@ -1,10 +1,6 @@
 <template>
     <div>
       <div class="recommend-slider"></div>
-      <audio id="musicAudio" controls="controls" loop="loop"
-             :src="musicSrc">
-      </audio>
-      <div class="icon" @click="playOrPause">stop</div>
       <div class="recommend-lists">
         <div class="recommend-list" v-for="list in lists">
           <div class="recommend-list-title mb10">{{list.title}}</div>
@@ -30,19 +26,10 @@
         name: "recommend",
         data() {
           return {
-            lists:[],
-            musicSrc:'/src/json/1.mp3'
+            lists:[]
          }
         },
         methods:{
-          playOrPause(){
-            let musicAudio = document.getElementById('musicAudio')
-            if(musicAudio.paused){
-              musicAudio.play();
-            }else{
-              musicAudio.pause();
-            }
-          },
           gotoDetail(listId){
             this.$router.push({name:'programList',query:{listId:listId}})
           },

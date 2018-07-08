@@ -1,14 +1,13 @@
 <template>
   <div class="listen">
-    <div class="listen-name"  v-if="listLen>0">{{tracksAudioPlay[playingIndex].trackName}}</div>
-    <div class="listen-singer" v-if="listLen>0">{{tracksAudioPlay[playingIndex].albumName}}</div>
+    <div class="listen-name">{{playingIndex+'. '+musicName}}</div>
+    <div class="listen-singer">{{musicSonger}}</div>
     <div class="listen-singer" v-if="isBuffering">loading...</div>
     <div class="listen-middle">
       <div class="listen-middle-panel">
         <div class="listen-middle-panel-div">
           <div class="listen-middle-image-rotate" :class="{'stop':isPaused}">
-            <img class="listen-middle-image" v-if="listLen>0"
-                 :src="tracksAudioPlay[playingIndex].trackCoverPath"></img>
+            <img class="listen-middle-image" :src="imageUrl"></img>
           </div>
         </div>
       </div>
@@ -22,30 +21,48 @@
         <div class="listen-bottom-endtime" v-if="!isBuffering">{{musicTotalTime}}</div>
         <div class="listen-bottom-endtime" v-if="isBuffering">...</div>
       </div>
-      <audio id="musicAudio" autoplay="autoplay" :src="tracksAudioPlay.length>0?tracksAudioPlay[playingIndex].src:defaultMusic">
-      </audio>
+      <audio id="musicAudio" autoplay="autoplay" :src="musicSrc"></audio>
       <div class="listen-bottom-btns">
-        <div :class="{'icon-loop':playWay===0,'icon-love':playWay===1,'icon-next':playWay===2}" @click="changePlayWay"></div>
+        <div :class="{'icon-loop':playWay===0,'icon-suiji':playWay===1,'icon-danqu':playWay===2}"
+             @click="changePlayWay"></div>
         <div class="icon-previous" @click="previousMusic"></div>
         <div class="listen-play-status" :class="{'icon-play':isPaused,'icon-pause':!isPaused}"
              @click="playOrPause"></div>
         <div class="icon-next" @click="nextMusic"></div>
-        <div class="icon-love listen-play-love" :class="{'loved':tracksAudioPlay.length>0&&tracksAudioPlay[playingIndex].isLike}" @click="loveMusic(playingIndex)"></div>
+        <div class="icon-love listen-play-love" :class="{'loved':isLike}" @click="loveMusic(playingIndex)"></div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-  let changeSeconds = function(seconds) {
+  let changeSeconds = function (seconds) {
     let minute = parseInt(Math.floor(seconds / 60), 10)
     let minuteStr = minute < 10 ? ('0' + minute) : minute
     let second = parseInt(Math.floor(seconds % 60), 10)
     let secondStr = second < 10 ? ('0' + second) : second
     return minuteStr + ':' + secondStr
   }
-  let randomIndex = function(startNum,endNum) {
-    return Math.floor(Math.random()*(endNum-startNum)+startNum)
+  let randomIndex = function (startNum, endNum) {
+    return Math.floor(Math.random() * (endNum - startNum) + startNum)
+  }
+  let setOneMusicInfo = function (_this, musicInfo) {
+    _this.musicName = musicInfo.trackName
+    _this.musicSonger = musicInfo.albumName
+    _this.musicSrc = musicInfo.src
+    _this.imageUrl = musicInfo.trackCoverPath
+    _this.isLike = musicInfo.isLike
+  }
+  let setOneMusicInfo163 = function (_this, musicInfo) {
+    _this.musicName = musicInfo.name
+    let musicSonger = ''
+    musicInfo.ar.forEach(function (item) {
+      musicSonger = musicSonger + item.name + ' '
+    })
+    _this.musicSonger = musicSonger
+    _this.musicSrc = musicInfo.src
+    _this.imageUrl = musicInfo.al.picUrl
+    _this.isLike = false
   }
   export default {
     name: "listen",
@@ -56,74 +73,94 @@
         processPercent: 0,
         musicCurTime: '00:00',
         musicTotalTime: '00:00',
-        //http://m10.music.126.net/20180707004158/b8650b5093a7df690cc3c8d926dfbde4/ymusic/7a49/a102/67fa/0635038753930e61a191b9da24e59934.mp3
-        playingIndex: 1,
-        listLen:0,
-        defaultMusic:'/src/json/stay with me.mp3',
-        tracksAudioPlay:[],
-        playWay:0,
-        playWays:['shunxu','suiji','danqu']
+        playingIndex: 26,
+        playWay: 0,
+        playWays: ['shunxu', 'suiji', 'danqu'],
+        // music info
+        musicName: '',
+        musicSonger: '',
+        musicSrc: '',
+        imageUrl: '',
+        isLike: false,
+        tracksAudioPlay: []
       }
     },
     methods: {
       setProcessPercent() {
-        this.timeOut = setInterval(() => {
+        this.intervalProcess = setInterval(() => {
           let duration = musicAudio.duration
           let currentTime = musicAudio.currentTime
           let processPercent = Math.floor(currentTime * 1000 / duration) / 1000
           this.processPercent = processPercent * 100
-          this.musicCurTime = changeSeconds(processPercent * duration)
+          let curTime = processPercent * duration
+          if (!isNaN(curTime)) {
+            this.musicCurTime = changeSeconds(processPercent * duration)
+            console.log(curTime)
+          }
         }, 1000)
       },
       playOrPause() {
         this.isPaused = !this.isPaused
         if (this.isPaused) {
-          clearTimeout(this.timeOut)
+          clearInterval(this.intervalProcess)
           musicAudio.pause();
-        } else {
+        } else if (!this.isPaused) {
           this.setProcessPercent()
           musicAudio.play();
         }
       },
-      previousMusic(){
-        if(this.playingIndex>0){
-          this.playingIndex--
-        }
-        this.isPaused = false
-      },
-      nextMusic(){
-        let playingIndex = this.playingIndex
-        switch (this.playWay){
+      previousMusic() {
+        let playingIndex = this.playingIndex, musicInfo
+        switch (this.playWay) {
           case 1:
-            this.playingIndex = randomIndex(0,this.tracksAudioPlay.length)
+            playingIndex = randomIndex(0, this.tracksAudioPlay.length)
+            musicInfo = this.tracksAudioPlay[playingIndex]
             break;
           default:
-            this.playingIndex=(++playingIndex)%(this.tracksAudioPlay.length);
+            let length = this.tracksAudioPlay.length
+            playingIndex = (--playingIndex + length) % (length)
+            musicInfo = this.tracksAudioPlay[playingIndex]
             break;
         }
-        this.isPaused = false
+        setOneMusicInfo(this, musicInfo)
+        this.playingIndex = playingIndex
+        if(this.isPaused){
+          this.isPaused = false
+          this.setProcessPercent()
+        }
       },
-      changePlayWay(){
+      nextMusic() {
+        let playingIndex = this.playingIndex, musicInfo = {}
+        switch (this.playWay) {
+          case 1:
+            playingIndex = randomIndex(0, this.tracksAudioPlay.length)
+            musicInfo = this.tracksAudioPlay[playingIndex]
+            break;
+          default:
+            playingIndex = (++playingIndex) % (this.tracksAudioPlay.length)
+            musicInfo = this.tracksAudioPlay[playingIndex]
+            break;
+        }
+        setOneMusicInfo(this, musicInfo)
+        this.playingIndex = playingIndex
+        if(this.isPaused){
+          this.isPaused = false
+          this.setProcessPercent()
+        }
+      },
+      changePlayWay() {
         let playWay = this.playWay
         playWay++
-        this.playWay = Math.floor(playWay%3)
-        switch (this.playWay){
-          case 0:break;
-          case 1:{
-            // musicAudio.addEventListener("ended", () =>{
-            //   this.playingIndex = randomIndex(0,this.tracksAudioPlay.length)
-            // },false)
-            break;
-          }
-          case 2:break;
-          default:break;
+        this.playWay = Math.floor(playWay % 3)
+        if (this.playWay === 2) {
+          musicAudio.loop = true
+        } else {
+          musicAudio.loop = false
         }
-        musicAudio.addEventListener('ended',()=> {
-
-        },false)
       },
-      loveMusic(){
+      loveMusic() {
 
+        window.open('http://audio.xmcdn.com/group41/M04/90/E0/wKgJ8lrDAm7i5NkcABr-v5Vrfrs688.m4a')
       },
       changeProcess(event) {
         if (event && event.offsetX) {
@@ -133,20 +170,24 @@
           if (offsetX > 0 && offsetX <= processWidth) {
             let percent = Math.floor(offsetX * 1000 / processWidth) / 1000
             let duration = musicAudio.duration
-            this.musicCurTime = changeSeconds(percent*duration)
+            let curTime = percent * duration
+            if (!isNaN(curTime)) {
+              this.musicCurTime = changeSeconds(curTime)
+            }
             this.processPercent = percent * 100
-            musicAudio.currentTime =  duration* percent
+            musicAudio.currentTime = duration * percent
           }
         }
       }
     },
     computed: {},
     mounted() {
-      this.axios.get('src/json/musicList.json').then( (response)=> {
+      this.axios.get('src/json/songsList.json').then((response) => {
         this.tracksAudioPlay = response.data.data.tracksAudioPlay
-        this.listLen = this.tracksAudioPlay.length
 
-        if(musicAudio){
+        if (musicAudio && this.tracksAudioPlay.length > 0) {
+          let musicInfo = this.tracksAudioPlay[this.playingIndex]
+          setOneMusicInfo(this, musicInfo)
           musicAudio.addEventListener("waiting", () => {
             this.isBuffering = true
           }, false)
@@ -155,20 +196,25 @@
             let duration = musicAudio.duration
             this.musicTotalTime = changeSeconds(duration)
           }, false)
-          musicAudio.addEventListener("ended", () =>{
-            let index = this.playingIndex
-            index++
-            this.playingIndex = index%(this.tracksAudioPlay.length)
-          },false)
-        }
-
-        if (this.timeOut) {
-          clearInterval(this.timeOut)
+          musicAudio.addEventListener("ended", () => {
+            let playWay = this.playWay
+            let playingIndex = this.playingIndex
+            switch (playWay) {
+              case 1:
+                playingIndex = randomIndex(0, this.tracksAudioPlay.length)
+                break;
+              default:
+                playingIndex = (++playingIndex) % (this.tracksAudioPlay.length)
+                break;
+            }
+            this.playingIndex = playingIndex
+            musicInfo = this.tracksAudioPlay[playingIndex]
+            setOneMusicInfo(this, musicInfo)
+          }, false)
         }
         this.setProcessPercent()
-
-      },function (error) {
-        console.log('get musicList.json error')
+      }, function (error) {
+        console.log('get songsList.json error')
       })
     }
   }
@@ -191,7 +237,8 @@
     width: 72%;
     white-space: nowrap;
     overflow: hidden;
-    padding: 10px;
+    padding: 10px 0;
+    text-align: center;
   }
 
   .listen-singer {
@@ -276,6 +323,8 @@
     padding: 0 3px 0 3px;
     color: #fff;
     font-size: 10px;
+    width: 10%;
+    overflow: hidden;
   }
 
   .listen-bottom-process-line {
@@ -283,7 +332,7 @@
     width: 70%;
     background: #c4bfbf;
     height: 4px;
-    margin: 0 0 3px 0;
+    margin-bottom: 6px;
   }
 
   .listen-bottom-endtime {
@@ -291,10 +340,11 @@
     padding: 0 3px 0 3px;
     color: #e0dede;
     font-size: 10px;
+    width: 10%;
+    overflow: hidden;
   }
 
   .listen-bottom-process-nowlen {
-    width: 50%;
     background: red;
     height: 4px;
   }
@@ -311,10 +361,12 @@
   .listen-play-status {
     font-size: 2em;
   }
-  .listen-play-love{
+
+  .listen-play-love {
     color: #fff;
   }
-  .listen-play-love.loved{
-    color:red;
+
+  .listen-play-love.loved {
+    color: red;
   }
 </style>

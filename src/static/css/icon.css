@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('../fonts/icomoon.eot?beh0tg');
-  src:  url('../fonts/icomoon.eot?beh0tg#iefix') format('embedded-opentype'),
-  url('../fonts/icomoon.ttf?beh0tg') format('truetype'),
-  url('../fonts/icomoon.woff?beh0tg') format('woff'),
-  url('../fonts/icomoon.svg?beh0tg#icomoon') format('svg');
+  src:  url('../fonts/icomoon.eot?7rfdzu');
+  src:  url('../fonts/icomoon.eot?7rfdzu#iefix') format('embedded-opentype'),
+  url('../fonts/icomoon.ttf?7rfdzu') format('truetype'),
+  url('../fonts/icomoon.woff?7rfdzu') format('woff'),
+  url('../fonts/icomoon.svg?7rfdzu#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -27,9 +27,6 @@
 .icon-return:before {
   content: "\e967";
 }
-.icon-danqu:before {
-  content: "\e984";
-}
 .icon-love:before {
   content: "\e9da";
 }
@@ -47,6 +44,9 @@
 }
 .icon-loop:before {
   content: "\ea2d";
+}
+.icon-danqu:before {
+  content: "\ea2f";
 }
 .icon-suiji:before {
   content: "\ea30";
