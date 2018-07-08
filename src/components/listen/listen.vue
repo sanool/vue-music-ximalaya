@@ -201,7 +201,10 @@
             let playingIndex = this.playingIndex
             switch (playWay) {
               case 1:
-                playingIndex = randomIndex(0, this.tracksAudioPlay.length)
+                let oldPlayIndex = playingIndex
+                while (oldPlayIndex===playingIndex) {
+                  playingIndex = randomIndex(0, this.tracksAudioPlay.length)
+                }
                 break;
               default:
                 playingIndex = (++playingIndex) % (this.tracksAudioPlay.length)
@@ -281,7 +284,7 @@
     box-sizing: border-box;
     border: 45px solid hsla(0, 0%, 3%, 0.8);
     border-radius: 50%;
-    animation: myrotate 20s linear infinite;
+    animation: myrotate 14s linear infinite;
   }
 
   .listen-middle-image-rotate.stop {
