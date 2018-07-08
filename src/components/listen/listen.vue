@@ -119,7 +119,7 @@
           default:break;
         }
         musicAudio.addEventListener('ended',()=> {
-
+          console.log('end')
         },false)
       },
       loveMusic(){
