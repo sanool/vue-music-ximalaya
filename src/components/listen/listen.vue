@@ -1,8 +1,13 @@
 <template>
   <div class="listen">
-    <div class="listen-name">{{playingIndex+'. '+musicName}}</div>
+    <div class="listen-name">{{playingIndex+1+ '. ' + musicName}}</div>
     <div class="listen-singer">{{musicSonger}}</div>
-    <div class="listen-singer" v-if="isBuffering">loading...</div>
+    <div class="listen-playlist-switch" :class="{'icon-list':!isShowLoveList,'icon-close':isShowLoveList,'listen-playlist-close':isShowLoveList}" @click="showLoveList"></div>
+    <div class="listen-playlist" v-if="isShowLoveList">
+      <div class="listen-playlist-item" v-for="(music,index) in tracksAudioPlay" @click="gotoLovedMusic(index)">
+        {{index+1+'.'+music.trackName}}
+      </div>
+    </div>
     <div class="listen-middle">
       <div class="listen-middle-panel">
         <div class="listen-middle-panel-div">
@@ -18,8 +23,7 @@
         <div id="processLineId" class="listen-bottom-process-line" @click="changeProcess($event)">
           <div class="listen-bottom-process-nowlen" :style="{'width':processPercent+'%'}"></div>
         </div>
-        <div class="listen-bottom-endtime" v-if="!isBuffering">{{musicTotalTime}}</div>
-        <div class="listen-bottom-endtime" v-if="isBuffering">...</div>
+        <div class="listen-bottom-endtime">{{musicTotalTime}}</div>
       </div>
       <audio id="musicAudio" autoplay="autoplay" :src="musicSrc"></audio>
       <div class="listen-bottom-btns">
@@ -69,11 +73,10 @@
     data() {
       return {
         isPaused: false,
-        isBuffering: true,
         processPercent: 0,
         musicCurTime: '00:00',
         musicTotalTime: '00:00',
-        playingIndex: 26,
+        playingIndex: randomIndex(0, 3),
         playWay: 0,
         playWays: ['shunxu', 'suiji', 'danqu'],
         // music info
@@ -82,7 +85,9 @@
         musicSrc: '',
         imageUrl: '',
         isLike: false,
-        tracksAudioPlay: []
+        tracksAudioPlay: [],
+        isShowLoveList: false,
+        loveList: []
       }
     },
     methods: {
@@ -95,7 +100,6 @@
           let curTime = processPercent * duration
           if (!isNaN(curTime)) {
             this.musicCurTime = changeSeconds(processPercent * duration)
-            console.log(curTime)
           }
         }, 1000)
       },
@@ -124,7 +128,7 @@
         }
         setOneMusicInfo(this, musicInfo)
         this.playingIndex = playingIndex
-        if(this.isPaused){
+        if (this.isPaused) {
           this.isPaused = false
           this.setProcessPercent()
         }
@@ -143,7 +147,7 @@
         }
         setOneMusicInfo(this, musicInfo)
         this.playingIndex = playingIndex
-        if(this.isPaused){
+        if (this.isPaused) {
           this.isPaused = false
           this.setProcessPercent()
         }
@@ -158,9 +162,40 @@
           musicAudio.loop = false
         }
       },
-      loveMusic() {
-
-        window.open('http://audio.xmcdn.com/group41/M04/90/E0/wKgJ8lrDAm7i5NkcABr-v5Vrfrs688.m4a')
+      loveMusic(index) {
+        this.isLike = !this.isLike
+        let music = this.tracksAudioPlay[index]
+        if (this.isLike) {
+          let name = music.trackName
+          this.loveList.push({
+            index: index,
+            name: name
+          })
+//            localStorage.setItem(index, index);
+        } else {
+//            if(localStorage.getItem(index)){
+//                localStorage.removeItem(index)
+          let hasLoved = false,loveList = this.loveList
+          for(let i = 0,len=loveList.length;i<len;i++){
+            if(loveList[i].index === index){
+              hasLoved = true;
+              this.loveList.splice(i,1)
+              break;
+            }
+          }
+          if (!hasLoved) {
+            console.error('love music error')
+          }
+        }
+        this.tracksAudioPlay[index].isLike = this.isLike
+      },
+      showLoveList(){
+        this.isShowLoveList = !this.isShowLoveList
+      },
+      gotoLovedMusic(index){
+        setOneMusicInfo(this, this.tracksAudioPlay[index])
+        this.playingIndex = index
+        this.isShowLoveList = false
       },
       changeProcess(event) {
         if (event && event.offsetX) {
@@ -181,44 +216,45 @@
       }
     },
     computed: {},
+    beforeMount(){
+      localStorage.clear();
+    },
     mounted() {
-      this.axios.get('src/json/songsList.json').then((response) => {
-        this.tracksAudioPlay = response.data.data.tracksAudioPlay
-
-        if (musicAudio && this.tracksAudioPlay.length > 0) {
-          let musicInfo = this.tracksAudioPlay[this.playingIndex]
-          setOneMusicInfo(this, musicInfo)
-          musicAudio.addEventListener("waiting", () => {
-            this.isBuffering = true
-          }, false)
-          musicAudio.addEventListener("canplaythrough", () => {
-            this.isBuffering = false
-            let duration = musicAudio.duration
-            this.musicTotalTime = changeSeconds(duration)
-          }, false)
-          musicAudio.addEventListener("ended", () => {
-            let playWay = this.playWay
-            let playingIndex = this.playingIndex
-            switch (playWay) {
-              case 1:
-                let oldPlayIndex = playingIndex
-                while (oldPlayIndex===playingIndex) {
-                  playingIndex = randomIndex(0, this.tracksAudioPlay.length)
-                }
-                break;
-              default:
-                playingIndex = (++playingIndex) % (this.tracksAudioPlay.length)
-                break;
-            }
-            this.playingIndex = playingIndex
-            musicInfo = this.tracksAudioPlay[playingIndex]
-            setOneMusicInfo(this, musicInfo)
-          }, false)
-        }
-        this.setProcessPercent()
+      this.axios.get('src/json/coder.json').then((response) => {
+        let tracksAudioPlay = response.data.data.tracksAudioPlay
+        let playingIndex = this.playingIndex || 0
+        this.playingIndex = playingIndex
+        this.tracksAudioPlay = tracksAudioPlay
+        let musicInfo = tracksAudioPlay[playingIndex]
+        setOneMusicInfo(this, musicInfo)
       }, function (error) {
         console.log('get songsList.json error')
       })
+      if (musicAudio) {
+        musicAudio.addEventListener('canplaythrough',()=>{
+          let duration = musicAudio.duration
+          this.musicTotalTime = changeSeconds(duration)
+        })
+        musicAudio.addEventListener("ended", () => {
+          let playWay = this.playWay
+          let playingIndex = this.playingIndex
+          switch (playWay) {
+            case 1:
+              let oldPlayIndex = playingIndex
+              while (oldPlayIndex === playingIndex) {
+                playingIndex = randomIndex(0, this.tracksAudioPlay.length)
+              }
+              break;
+            default:
+              playingIndex = (++playingIndex) % (this.tracksAudioPlay.length)
+              break;
+          }
+          this.playingIndex = playingIndex
+          let musicInfo = this.tracksAudioPlay[playingIndex]
+          setOneMusicInfo(this, musicInfo)
+        }, false)
+      }
+      this.setProcessPercent()
     }
   }
 </script>
@@ -231,6 +267,39 @@
     width: 100%;
     height: 100%;
     background: #676562;
+  }
+
+  .listen-playlist-switch {
+    position: fixed;
+    right: 21px;
+    top: 14px;
+    font-size: 1.3em;
+    color: #fff;
+  }
+.listen-playlist-close.icon-close{
+  color: red;
+  font-size: 14px;
+}
+  .listen-playlist {
+    position: fixed;
+    right: 23px;
+    top: 32px;
+    background: white;
+    width: 65%;
+    height: 50%;
+    z-index: 9999;
+    border: 1px solid #c2bcbc;
+    border-radius: 19px;
+    box-shadow: 0 0 18px #ea1616;
+    overflow-y: scroll;
+    padding: 10px;
+  }
+  .listen-playlist-item {
+    height: 32px;
+    line-height: 32px;
+    margin: 0 3px;
+    overflow: hidden;
+    border-bottom: 1px solid #d9d4d4;
   }
 
   .listen-name {
@@ -328,6 +397,7 @@
     font-size: 10px;
     width: 10%;
     overflow: hidden;
+    text-align: center;
   }
 
   .listen-bottom-process-line {
@@ -345,6 +415,7 @@
     font-size: 10px;
     width: 10%;
     overflow: hidden;
+    text-align: center;
   }
 
   .listen-bottom-process-nowlen {
