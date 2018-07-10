@@ -65,16 +65,18 @@
     },
     mounted() {
       this.axios.get('src/json/programDetail.json').then(response => {
-        this.mainInfo = response.data.data.mainInfo;
-        this.anchorInfo = response.data.data.anchorInfo;
-        this.type = response.data.data.mainInfo.crumbs.categoryTitle;
+        let data = response.data.data
+        this.mainInfo = data.mainInfo;
+        this.anchorInfo = data.anchorInfo;
+        this.type = data.mainInfo.crumbs.categoryTitle;
       }, function (error) {
         console.log('get programDetail.json error')
       })
 
       this.axios.get('src/json/page.json').then(response => {
-        this.trackTotalCount = response.data.data.trackTotalCount;
-        this.programList = response.data.data.tracks;
+        let data = response.data.data
+        this.trackTotalCount = data.trackTotalCount;
+        this.programList = data.tracks;
       }, function (error) {
         console.log('get page.json error')
       })

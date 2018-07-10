@@ -1,0 +1,246 @@
+{
+  "playlist": {
+    "subscribers": [],
+    "subscribed": false,
+    "creator": {
+      "defaultAvatar": false,
+      "province": 330000,
+      "authStatus": 0,
+      "followed": false,
+      "avatarUrl": "http://p1.music.126.net/_uhMzBILGFq8Ukow6Z7etA==/3427177761720454.jpg",
+      "accountStatus": 0,
+      "gender": 2,
+      "city": 330100,
+      "birthday": -2209017600000,
+      "userId": 331203739,
+      "userType": 0,
+      "nickname": "nyz-123",
+      "signature": "爱民谣的程序员",
+      "description": "",
+      "detailDescription": "",
+      "avatarImgId": 3427177761720454,
+      "backgroundImgId": 18754369837161336,
+      "backgroundUrl": "http://p1.music.126.net/zzQeSjuv4DBlJsTnh19j6g==/18754369837161336.jpg",
+      "authority": 0,
+      "mutual": false,
+      "expertTags": null,
+      "experts": null,
+      "djStatus": 0,
+      "vipType": 0,
+      "remarkName": null,
+      "avatarImgIdStr": "3427177761720454",
+      "backgroundImgIdStr": "18754369837161336"
+    },
+    "tracks": [
+      {
+        "name": "白羊",
+        "src":"http://m10.music.126.net/20180708150140/2afc11bdcdae7d2127319f33fc2556f4/ymusic/25a2/4ff4/52fc/d664724d25de35a8d4e23c1b986c60b5.mp3",
+        "id": 514761281,
+        "pst": 0,
+        "t": 0,
+        "ar": [
+          {
+            "id": 1197168,
+            "name": "徐秉龙",
+            "tns": [],
+            "alias": []
+          },
+          {
+            "id": 12002248,
+            "name": "沈以诚",
+            "tns": [],
+            "alias": []
+          }
+        ],
+        "alia": [],
+        "pop": 100.0,
+        "st": 0,
+        "rt": null,
+        "fee": 8,
+        "v": 15,
+        "crbt": null,
+        "cf": "",
+        "al": {
+          "id": 36633179,
+          "name": "白羊",
+          "picUrl": "http://p1.music.126.net/tczb_7II9KzSuLQsVt89Gw==/109951163049336667.jpg",
+          "tns": [],
+          "pic_str": "109951163049336667",
+          "pic": 109951163049336667
+        },
+        "dt": 168420,
+        "h": {
+          "br": 320000,
+          "fid": 0,
+          "size": 6739636,
+          "vd": 0.0
+        },
+        "m": {
+          "br": 192000,
+          "fid": 0,
+          "size": 4043799,
+          "vd": 0.0
+        },
+        "l": {
+          "br": 128000,
+          "fid": 0,
+          "size": 2695880,
+          "vd": 0.0
+        },
+        "a": null,
+        "cd": "",
+        "no": 1,
+        "rtUrl": null,
+        "ftype": 0,
+        "rtUrls": [],
+        "djId": 0,
+        "copyright": 0,
+        "s_id": 0,
+        "mst": 9,
+        "cp": 0,
+        "mv": 0,
+        "rtype": 0,
+        "rurl": null,
+        "publishTime": 1508947200007
+      },
+      {
+        "name": "青春住了谁",
+        "src":"http://m10.music.126.net/20180708145930/6b38ca5853c4bee8221709db2789ae0a/ymusic/70a2/0cdf/afa3/2540cebc32755a8d241cb36c4201a5c9.mp3",
+        "id": 505451285,
+        "pst": 0,
+        "t": 0,
+        "ar": [
+          {
+            "id": 10199,
+            "name": "杨丞琳",
+            "tns": [],
+            "alias": []
+          }
+        ],
+        "alia": [],
+        "pop": 100.0,
+        "st": 0,
+        "rt": null,
+        "fee": 8,
+        "v": 15,
+        "crbt": null,
+        "cf": "",
+        "al": {
+          "id": 36165421,
+          "name": "青春住了谁",
+          "picUrl": "http://p1.music.126.net/f8I94rzjMCzZJ0q1fR0ftw==/109951163023754735.jpg",
+          "tns": [],
+          "pic_str": "109951163023754735",
+          "pic": 109951163023754735
+        },
+        "dt": 270691,
+        "h": {
+          "br": 320000,
+          "fid": 0,
+          "size": 10830411,
+          "vd": -1.0
+        },
+        "m": {
+          "br": 192000,
+          "fid": 0,
+          "size": 6498264,
+          "vd": -1.0
+        },
+        "l": {
+          "br": 128000,
+          "fid": 0,
+          "size": 4332191,
+          "vd": -1.0
+        },
+        "a": null,
+        "cd": "1",
+        "no": 1,
+        "rtUrl": null,
+        "ftype": 0,
+        "rtUrls": [],
+        "djId": 0,
+        "copyright": 0,
+        "s_id": 0,
+        "mst": 9,
+        "cp": 660010,
+        "mv": 5619734,
+        "rtype": 0,
+        "rurl": null,
+        "publishTime": 1505232000007
+      }
+    ],
+    "trackIds": [
+      {
+        "id": 514761281,
+        "v": 15
+      },
+      {
+        "id": 505451285,
+        "v": 15
+      }
+    ],
+    "ordered": false,
+    "tags": [],
+    "status": 0,
+    "trackUpdateTime": 1528730728845,
+    "trackCount": 2,
+    "privacy": 0,
+    "newImported": false,
+    "coverImgId": 109951163049336667,
+    "createTime": 1527610961356,
+    "userId": 331203739,
+    "specialType": 0,
+    "playCount": 0,
+    "updateTime": 1528730728694,
+    "commentThreadId": "A_PL_0_2247011614",
+    "highQuality": false,
+    "coverImgUrl": "http://p1.music.126.net/tczb_7II9KzSuLQsVt89Gw==/109951163049336667.jpg",
+    "adType": 0,
+    "trackNumberUpdateTime": 1528730715993,
+    "subscribedCount": 0,
+    "cloudTrackCount": 0,
+    "description": null,
+    "name": "付费音乐",
+    "id": 2247011614,
+    "shareCount": 0,
+    "coverImgId_str": "109951163049336667",
+    "commentCount": 0
+  },
+  "code": 200,
+  "privileges": [
+    {
+      "id": 514761281,
+      "fee": 8,
+      "payed": 0,
+      "st": 0,
+      "pl": 128000,
+      "dl": 0,
+      "sp": 7,
+      "cp": 1,
+      "subp": 1,
+      "cs": false,
+      "maxbr": 999000,
+      "fl": 128000,
+      "toast": false,
+      "flag": 2,
+      "preSell": false
+    },
+    {
+      "id": 505451285,
+      "fee": 8,
+      "payed": 0,
+      "st": 0,
+      "pl": 128000,
+      "dl": 0,
+      "sp": 7,
+      "cp": 1,
+      "subp": 1,
+      "cs": false,
+      "maxbr": 999000,
+      "fl": 128000,
+      "toast": false,
+      "flag": 0,
+      "preSell": false
+    }
+  ]
+}
