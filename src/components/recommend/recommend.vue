@@ -30,18 +30,20 @@
          }
         },
         methods:{
-          gotoDetail(listId){
-            this.$router.push({name:'programList',query:{listId:listId}})
+          gotoDetail(albumId){
+            this.$router.push({name:'programList',query:{albumId:albumId}})
           },
         },
       computed:{
 
       },
       mounted(){
-          this.axios.get('src/json/guessYouLove.json').then( response =>{
+          // 大坑 --disable-web-security --user-data-dir
+          this.axios.get('/api/revision/explore/getRecommend').then( response =>{
             this.lists = response.data.data.cards;
           },function (error) {
             console.log('get guessYouLove.json error')
+            alert("error")
           })
       }
     }
@@ -68,6 +70,7 @@
    display: flex;
    flex-direction:row;
    flex-wrap:nowrap;
+   overflow:scroll;
  }
  .recommend-list-card{
    position: relative;
