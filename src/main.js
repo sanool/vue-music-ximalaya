@@ -3,10 +3,9 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import App from './App.vue'
 import router from './router'
-import 'static/css/common.css'
-import 'static/css/icon.css'
+import './static/css/common.css'
+import './static/css/icon.css'
 
-// let Hub = new Vue();
 Vue.use(VueAxios,axios)
 
 let app = new Vue({

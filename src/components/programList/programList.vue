@@ -19,7 +19,7 @@
       {{mainInfo.detailRichIntro1}}
     </div>
     <div class="programlist-list" v-if="selectedTab===1">
-      <div class="programlist-list-item" v-for="(program,index) in programList" @click="gotoListen(program.trackId)">
+      <div class="programlist-list-item" v-for="(program,index) in programList" @click="gotoListen(program,index)">
         <span class="programlist-list-item-index">{{index+1}}</span>
         <span class="programlist-list-item-title">{{program.title}}</span>
       </div>
@@ -59,12 +59,15 @@
             break;
         }
       },
-      gotoListen(trackId){
-        this.$router.push({name:'listen',query:{trackId:trackId}})
+      gotoListen(program,index){
+        let albumId = this.$route.query.albumId
+        this.$router.push({name:'listen',query:{albumId:albumId,trackId:program.trackId,index:index}})
       }
     },
     mounted() {
-      this.axios.get('src/json/programDetail.json').then(response => {
+      let albumId = this.$route.query.albumId
+
+      this.axios.get('/api/revision/album',{params:{albumId:albumId}}).then(response => {
         let data = response.data.data
         this.mainInfo = data.mainInfo;
         this.anchorInfo = data.anchorInfo;
@@ -73,7 +76,7 @@
         console.log('get programDetail.json error')
       })
 
-      this.axios.get('src/json/page.json').then(response => {
+      this.axios.get('/api/revision/album/getTracksList',{params:{albumId:albumId,pageNum:1}}).then(response => {
         let data = response.data.data
         this.trackTotalCount = data.trackTotalCount;
         this.programList = data.tracks;

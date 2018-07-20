@@ -76,7 +76,7 @@
         processPercent: 0,
         musicCurTime: '00:00',
         musicTotalTime: '00:00',
-        playingIndex: randomIndex(0, 3),
+        playingIndex: 0,
         playWay: 0,
         playWays: ['shunxu', 'suiji', 'danqu'],
         // music info
@@ -220,7 +220,17 @@
       localStorage.clear();
     },
     mounted() {
-      this.axios.get('src/json/coder.json').then((response) => {
+      let albumId = this.$route.query.albumId
+      let trackId = this.$route.query.trackId
+      this.playingIndex = this.$route.query.index
+      this.axios.get('/api/revision/play/album',{
+         params:{
+         albumId:albumId,
+         pageNum:1,
+         sort:-1,
+         pageSize:30
+        }
+      }).then((response) => {
         let tracksAudioPlay = response.data.data.tracksAudioPlay
         let playingIndex = this.playingIndex || 0
         this.playingIndex = playingIndex
@@ -255,6 +265,9 @@
         }, false)
       }
       this.setProcessPercent()
+    },
+    destroyed(){
+      clearInterval(this.intervalProcess)
     }
   }
 </script>
